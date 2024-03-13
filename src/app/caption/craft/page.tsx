@@ -21,7 +21,9 @@ export default function craft(){
         
         
         
-        <div className="absolute h-[70%] w-[65%] top-[35%] left-[17%] border border-white bg-[#5E5E5E]"></div>
+        <div className="absolute h-[70%] w-[65%] top-[35%] left-[17%] border border-white bg-[#5E5E5E]">
+            
+        </div>
         <div className="absolute top-[125%] left-[34%]"><img className="scale-[180%]" src="/images/transcript.png"></img></div>
         
 

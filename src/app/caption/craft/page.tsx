@@ -3,7 +3,7 @@
 import YouTubePlayer from "../../../../components/YoutubePlayer";
 import React, { ChangeEvent, useState } from 'react';
 
-export default function craft(){
+export default function Craft(){
     const [url, setUrl] = useState<string>('');
     const [Videourl, setVideoUrl] = useState<string>('');
   
@@ -11,9 +11,25 @@ export default function craft(){
       setUrl(e.target.value)
     }
 
-    const buttonClck = () => {
-      setVideoUrl(url)
-    }
+    const buttonClck = async () => {
+      try {
+        const response = await fetch('/api/youtube', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ youtubeLink: url }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to download video');
+        }
+        const data = await response.json();
+        console.log('Video downloaded:', data.filePath);
+      } catch (error) {
+        console.error('Error downloading video:', error);
+      }
+    };
+    
     return(
         <><div className="h-[100%]">
         <div className="relative">

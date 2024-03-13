@@ -1,4 +1,19 @@
+"use client"
+
+import YouTubePlayer from "../../../../components/YoutubePlayer";
+import React, { ChangeEvent, useState } from 'react';
+
 export default function craft(){
+    const [url, setUrl] = useState<string>('');
+    const [Videourl, setVideoUrl] = useState<string>('');
+  
+    const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setUrl(e.target.value)
+    }
+
+    const buttonClck = () => {
+      setVideoUrl(url)
+    }
     return(
         <><div className="h-[100%]">
         <div className="relative">
@@ -12,11 +27,11 @@ export default function craft(){
         </div>
         <div className="z-20 relative h-[100vh]">
         <div className="absolute top-[20%] left-[17%] h-[100%] ">
-                <input placeholder="Paste URL here" type="text" className="w-[550%] h-[7%] bg-[#5E5E5E] border border-white text-white"></input>
+                <input value={url} onChange={handle} placeholder="Paste URL here" type="text" className="w-[550%] h-[7%] bg-[#5E5E5E] border border-white text-white"></input>
                 
         </div>
         <div className="absolute top-[20.5%] left-[75%]">
-        <button className="minecraft-btn mx-auto w-16 h-16 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200"><img  className="scale-[250%]" src="/images/go.png"></img></button>
+        <button onClick={buttonClck} className="minecraft-btn mx-auto w-16 h-16 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200"><img  className="scale-[250%]" src="/images/go.png"></img></button>
         </div>
         
         
@@ -26,7 +41,16 @@ export default function craft(){
         </div>
         <div className="absolute top-[125%] left-[34%]"><img className="scale-[180%]" src="/images/transcript.png"></img></div>
         
-
+        <div className="absolute left-[44%] top-[70%]">
+            <button className="minecraft-btn mx-auto w-64 text-center text-white truncate p-2 border-2 border-b-4 hover:text-yellow-200">
+                Generate Transcript
+            </button>
+        </div>
+        <div className="absolute left-[35%] top-[31%] z-5 ">
+          <div className="flex flex-col gap-5">
+            <YouTubePlayer url={Videourl}/>
+          </div>
+        </div>
         </div>
         </>
     )

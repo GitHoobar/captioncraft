@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import ffmpeg from 'fluent-ffmpeg';
 import { exec } from 'child_process';
+require('dotenv').config();
 
 
 function sanitizeFileName(fileName: string): string {
@@ -89,7 +90,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function transcribeAudio(audioFilePath: string) {
   const openai = new OpenAI({
-    apiKey: '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'
+    apiKey: process.env.OPENAI_API_KEY
   });
 
   try {

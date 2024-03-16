@@ -83,8 +83,8 @@ export default function Craft() {
                         </button>
                     </div>
                     {transcript && (
-                        <div className="flex justify-center items-center">
-                            <div className="transcript-div">
+                        <div className="flex justify-center items-center w-full">
+                            <div className="transcript-div w-full bg-red text-white">dfasiofos
                                 <h2>Transcript:</h2>
                                 <p>{transcript}</p>
                             </div>

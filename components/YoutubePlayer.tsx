@@ -8,11 +8,10 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ url }) => {
   const videoId = extractVideoId(url);
 
   return (
-    <div>
+    <div className='h-full w-full  '>
       {videoId && (
         <iframe
-          width="560"
-          height="315"
+        className=" w-96 h-54 sm:w-54 sm:h-96 "
           src={`https://www.youtube.com/embed/${videoId}`}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

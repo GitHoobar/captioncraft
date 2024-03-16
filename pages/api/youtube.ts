@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const videoStream = ytdl(youtubeLink, {filter: 'audioandvideo', quality: 'highest'});
       const sanitizedVideoTitle = sanitizeFileName(videoTitle);
 
-      const videoFilePath = `./${sanitizedVideoTitle[3]}.mp4`;
+      const videoFilePath = `./${sanitizedVideoTitle}.mp4`;
       const writeStream = fs.createWriteStream(videoFilePath);
 
       videoStream.pipe(writeStream);
@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const audioFilePath = `./test.mp3`;
         const bitrate = '128k'
         const ffmpegCommand = `ffmpeg -i ${videoFilePath} -vn -acodec libmp3lame -b:a ${bitrate}  -y ${audioFilePath}`;
-        console.log("here")
+
         exec(ffmpegCommand, async(error, stdout, stderr) => {
           console.log('Video converted to audio successfully');
           
@@ -67,12 +67,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   console.error('Error writing file:', err);
               } else {
                   console.log('Transcription saved to:', tpath);
-              }}
-              )
-            
+
+                  // Delete the audio file
+                  try {
+                    fs.unlinkSync(audioFilePath);
+                    console.log('Audio file deleted successfully');
+                  } catch (audioUnlinkError) {
+                    console.error('Error deleting audio file:', audioUnlinkError);
+                  }
+              }
+            });
 
             // Send the audio file path and the transcription file path to the client
-            res.status(200).json({ success: true, audioFilePath, transcriptionFilePath: tpath });
+            res.status(200).json({transcription: transcriptionString });
         } catch (writeError) {
             console.error('Error saving transcription to file:', writeError);
             res.status(500).json({ error: 'Internal Server Error' });

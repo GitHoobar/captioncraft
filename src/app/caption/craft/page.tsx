@@ -1,7 +1,7 @@
 "use client"
 
 import YouTubePlayer from "../../../../components/YoutubePlayer";
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState, useEffect } from 'react';
 
 export default function Craft(){
     const [url, setUrl] = useState<string>('');
@@ -11,7 +11,7 @@ export default function Craft(){
       setUrl(e.target.value)
     }
 
-    const buttonClck = async () => {
+    const buttonClick = async () => {
       try {
         const response = await fetch('/api/youtube', {
           method: 'POST',
@@ -29,6 +29,11 @@ export default function Craft(){
         console.error('Error downloading video:', error);
       }
     };
+
+    const previewButton = () => {
+      setVideoUrl(url)
+    }
+
     
     return(
         <><div className="h-[100%]">
@@ -47,7 +52,7 @@ export default function Craft(){
                 
         </div>
         <div className="absolute top-[20.5%] left-[75%]">
-        <button onClick={buttonClck} className="minecraft-btn mx-auto w-16 h-16 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200"><img  className="scale-[250%]" src="/images/go.png"></img></button>
+        <button onClick={previewButton} className="minecraft-btn mx-auto w-16 h-16 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200"><img  className="scale-[250%]" src="/images/go.png"></img></button>
         </div>
         
         
@@ -58,7 +63,7 @@ export default function Craft(){
         <div className="absolute top-[125%] left-[34%]"><img className="scale-[180%]" src="/images/transcript.png"></img></div>
         
         <div className="absolute left-[44%] top-[70%]">
-            <button className="minecraft-btn mx-auto w-64 text-center text-white truncate p-2 border-2 border-b-4 hover:text-yellow-200">
+            <button onClick={buttonClick} className="minecraft-btn mx-auto w-64 text-center text-white truncate p-2 border-2 border-b-4 hover:text-yellow-200">
                 Generate Transcript
             </button>
         </div>

@@ -18,9 +18,9 @@ export default function Home() {
                 <div className="absolute left-1/2 top-3/4 transform -translate-x-1/2 -translate-y-1/2 z-5 ">
           <div className="flex flex-col gap-5">
         <Link href={"/caption"}>
-        <button className="minecraft-btn  xl:w-64 lg:w-60 md:w-52 sm:w-44 w-40 h-7 sm:h-7 md:h-7 xl:h-8 lg:h-8 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200" >Start</button></Link>
-        <button className="minecraft-btn  xl:w-64 lg:w-60 md:w-52 sm:w-44 w-40 h-7 sm:h-7 md:h-7 xl:h-8 lg:h-8 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200">Sign Up</button>
-        <button className="minecraft-btn  xl:w-64 lg:w-60 md:w-52 sm:w-44 w-40 h-7 sm:h-7 md:h-7 xl:h-8 lg:h-8 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200">Log In</button>
+        <button style={{fontFamily:'minecraft'}} className="minecraft-btn font-minecraft  xl:w-64 lg:w-60 md:w-52 sm:w-44 w-40 h-7 sm:h-7 md:h-7 xl:h-8 lg:h-8 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200" >Start</button></Link>
+        <button style={{fontFamily:'minecraft'}} className="minecraft-btn  xl:w-64 lg:w-60 md:w-52 sm:w-44 w-40 h-7 sm:h-7 md:h-7 xl:h-8 lg:h-8 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200">Sign Up</button>
+        <button style={{fontFamily:'minecraft'}} className="minecraft-btn  xl:w-64 lg:w-60 md:w-52 sm:w-44 w-40 h-7 sm:h-7 md:h-7 xl:h-8 lg:h-8 text-center text-white truncate p-1 border-2 border-b-4 hover:text-yellow-200">Log In</button>
           </div>
         </div>
             </div>

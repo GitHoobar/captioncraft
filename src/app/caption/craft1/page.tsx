@@ -34,11 +34,12 @@
             <div className="flex justify-center items-center mt-16 gap-4">
               <div className="w-[80%]  flex justif-center items-center ">
                 <input
+                  style={{fontFamily:'minecraft'}}
                   value={url}
                   onChange={handle}
-                  placeholder="Paste URL here"
+                  placeholder="  Paste URL here"
                   type="text"
-                  className=" h-12 w-[100%]  bg-[#5E5E5E] border border-white text-white"
+                  className=" h-12 w-[100%] font-minecraft bg-[#5E5E5E] border border-white text-white"
                 />
               </div>
               <div className="flex justify-center items-center">
@@ -65,6 +66,7 @@
             <div className="flex justify-center items-center">
               <button
                 onClick={buttonClick}
+                style={{fontFamily:'minecraft'}}
                 className="minecraft-btn h-8 w-32 xl:text-[1rem] xl:w-64  text-center text-white text-[0.5rem] truncate p-2 border-2 border-b-4 hover:text-yellow-200"
               >
                 Generate Transcript
@@ -75,13 +77,13 @@
               <img
                 src="/images/transcript.png"
                 alt="Transcript"
-                className="size-[80%]  xl:size-[80%] lg:size-[70%] md:size-[70%] sm:size-[70%]"
+                className="size-[80%] xl:size-[80%] lg:size-[70%] md:size-[70%] sm:size-[70%]"
               />
               
               <div className=" text-black text-4xl absolute text-center text-sm ">
                 
-                <div>
-                  {transcript.replace(/^{"text": }/,'')}
+                <div style={{fontFamily:'minecraft'}} className="w-64 text-lg ">
+                  {transcript}
                 </div>
                 
             </div>

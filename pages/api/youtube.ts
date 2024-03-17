@@ -86,9 +86,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         });
       });
-    } catch (error) {
-      console.error('Error downloading video:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    // } catch (error) {
+    //   console.error('Error downloading video:', error);
+    //   res.status(500).json({ error: 'Internal Server Error' });
     }
   } else {
     res.status(405).json({ message: 'Method Not Allowed' });

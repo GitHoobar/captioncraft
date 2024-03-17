@@ -18,20 +18,48 @@
     };
 
     const buttonClick = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.post("https://captioncraft.vercel.app/api/youtube", { youtubeLink: url });
-        const data = response.data.transcription;
-        const parsedData = JSON.parse(data);
-        const transcriptValue = parsedData.text;
-        setTranscript(transcriptValue);
-        console.log("Video downloaded successfully")
-      } catch (error) {
-        console.error("Error downloading video:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+       try {
+          setLoading(true);
+          console.log("Attempting to download video...");
+          const response = await axios.post("/api/youtube", { youtubeLink: url });
+          console.log("Response received:", response);
+          const data = response.data.transcription;
+          const parsedData = JSON.parse(data);
+          const transcriptValue = parsedData.text;
+          setTranscript(transcriptValue);
+          console.log("Video downloaded successfully");
+       } catch (error) {
+          console.error("Error downloading video:", error);
+          // Additional logging for debugging
+          if (error.response) {
+            console.error("Response data:", error.response.data);
+            console.error("Response status:", error.response.status);
+            console.error("Response headers:", error.response.headers);
+          } else if (error.request) {
+            console.error("Request:", error.request);
+          } else {
+            console.error("Error message:", error.message);
+          }
+       } finally {
+          setLoading(false);
+       }
+      };
+    
+    // const buttonClick = async () => {
+    //   try {
+    //     setLoading(true);
+    //     const response = await axios.post("https://captioncraft.vercel.app/api/youtube", { youtubeLink: url });
+    //     const data = response.data.transcription;
+    //     const parsedData = JSON.parse(data);
+    //     const transcriptValue = parsedData.text;
+    //     setTranscript(transcriptValue);
+    //     console.log("Video downloaded successfully")
+    //   } catch (error) {
+    //     console.error("Error downloading video:", error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
     const previewButton = () => {
       setVideoUrl(url);
     };

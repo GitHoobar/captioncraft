@@ -16,13 +16,14 @@
     const buttonClick = async () => {
       try {
         const response = await axios.post("/api/youtube", { youtubeLink: url });
-        const data = response.data.transcription
-        setTranscript(data);
+        const data = response.data.transcription;
+        const parsedData = JSON.parse(data);
+        const transcriptValue = parsedData.text;
+        setTranscript(transcriptValue);
       } catch (error) {
         console.error("Error downloading video:", error);
       }
     };
-
     const previewButton = () => {
       setVideoUrl(url);
     };
@@ -54,10 +55,10 @@
               </div>
             </div>
             <div className="w-[83%] mx-auto flex justify-center items-center">
-              <div className="relative w-[100%] h-72 xl:h-[70vh] lg:h-[70vh] md:h-[60vh] sm:h-[60vh] border border-white bg-[#5E5E5E]"></div>
+              <div className="relative w-[100%] h-72 xl:h-[74vh] xl:w-[100%] lg:h-[70vh] lg:w-[100%] md:h-[60vh] sm:h-[60vh] border border-white bg-[#5E5E5E]"></div>
               {Videourl && (
-                <div className="absolute left-1/2 top-[30%] transform -translate-x-1/2 -translate-y-1/2 z-5">
-                  <div className="flex h-full w-full justify-center items-center] ">
+                <div className="absolute left-1/2 top-[30%] transform -translate-x-1/2 -translate-y-1/2 h-[30%] top-[40%] xl:h-[70%] xl:w-[80%] xl:top-[55%] lg:h-[65%] lg:w-[80%] lg:top-[53%] md:h-[55%] md:w-[80%] md:top-[48%] sm:h-[57%] sm:w-[80%] sm:top-[48%]  z-5">
+                  <div className="flex h-full w-full lg:h-[100%] md:h-[100%] md:w-[100%] sm:h-[100%] sm:w-[100%] justify-center items-center] ">
                     <YouTubePlayer url={Videourl} />
                   </div>
                 </div>
@@ -80,9 +81,9 @@
                 className="size-[80%] xl:size-[80%] lg:size-[70%] md:size-[70%] sm:size-[70%]"
               />
               
-              <div className=" text-black text-4xl absolute text-center text-sm ">
+              <div className=" text-black absolute text-center align-center left-[20%] text-sm ">
                 
-                <div style={{fontFamily:'minecraft'}} className="w-64 text-lg ">
+                <div style={{fontFamily:'minecraft'}} className="w-[79%] h-48 text-[0.7rem] sm:text-sm lg:text-md xl:text-lg text-center">
                   {transcript}
                 </div>
                 

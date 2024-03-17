@@ -3,11 +3,15 @@
   import YouTubePlayer from "../../../../components/YoutubePlayer";
   import React, { ChangeEvent, useState, useEffect } from "react";
   import axios from "axios";
+  import Spinner from "../../../../components/Spinner";
+  
 
   export default function Craft() {
     const [url, setUrl] = useState<string>("");
     const [Videourl, setVideoUrl] = useState<string>("");
     const [transcript, setTranscript] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+
 
     const handle = (e: React.ChangeEvent<HTMLInputElement>) => {
       setUrl(e.target.value);
@@ -15,13 +19,17 @@
 
     const buttonClick = async () => {
       try {
+        setLoading(true);
         const response = await axios.post("/api/youtube", { youtubeLink: url });
         const data = response.data.transcription;
         const parsedData = JSON.parse(data);
         const transcriptValue = parsedData.text;
         setTranscript(transcriptValue);
+        console.log("Video downloaded successfully")
       } catch (error) {
         console.error("Error downloading video:", error);
+      } finally {
+        setLoading(false);
       }
     };
     const previewButton = () => {
@@ -55,10 +63,10 @@
               </div>
             </div>
             <div className="w-[83%] mx-auto flex justify-center items-center">
-              <div className="relative w-[100%] h-72 xl:h-[74vh] xl:w-[100%] lg:h-[70vh] lg:w-[100%] md:h-[60vh] sm:h-[60vh] border border-white bg-[#5E5E5E]"></div>
+              <div className="relative w-[100%] h-72 xl:h-[80vh] xl:w-[100%] lg:h-[72vh] lg:w-[100%] md:h-[60vh] sm:h-[60vh] border border-white bg-[#5E5E5E]"></div>
               {Videourl && (
-                <div className="absolute left-1/2 top-[30%] transform -translate-x-1/2 -translate-y-1/2 h-[30%] top-[40%] xl:h-[70%] xl:w-[80%] xl:top-[55%] lg:h-[65%] lg:w-[80%] lg:top-[53%] md:h-[55%] md:w-[80%] md:top-[48%] sm:h-[57%] sm:w-[80%] sm:top-[48%]  z-5">
-                  <div className="flex h-full w-full lg:h-[100%] md:h-[100%] md:w-[100%] sm:h-[100%] sm:w-[100%] justify-center items-center] ">
+                <div className="absolute left-1/2 top-[30%] transform -translate-x-1/2 -translate-y-1/2 h-[32%] w-[80%] top-[35%] xl:h-[70%] xl:w-[80%] xl:top-[55%] lg:h-[65%] lg:w-[80%] lg:top-[53%] md:h-[55%] md:w-[80%] md:top-[48%] sm:h-[57%] sm:w-[80%] sm:top-[48%]  z-5">
+                  <div className="flex h-[100%] w-[100%] lg:h-[100%] md:h-[100%] md:w-[100%] sm:h-[100%] sm:w-[100%] justify-center items-center] ">
                     <YouTubePlayer url={Videourl} />
                   </div>
                 </div>
@@ -74,6 +82,8 @@
               </button>
             </div>
 
+            {loading && <Spinner />} {}
+ 
             <div className="flex z-1 justify-center h-[40vh] w-[100%] xl:h-[120vh] lg:h-[90vh] lg:w-[98%] md:h-[80vh] md:w-[100vw] sm:h-[50vh] sm:w-[80vh] items-center ">
               <img
                 src="/images/transcript.png"
@@ -90,6 +100,7 @@
             </div>
               
             </div>
+            
           </div>
         </div>
 

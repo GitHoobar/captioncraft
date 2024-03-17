@@ -20,7 +20,7 @@
     const buttonClick = async () => {
       try {
         setLoading(true);
-        const response = await axios.post("http://localhost:3000/api/youtube", { youtubeLink: url });
+        const response = await axios.post("https://captioncraft.vercel.app/api/youtube", { youtubeLink: url });
         const data = response.data.transcription;
         const parsedData = JSON.parse(data);
         const transcriptValue = parsedData.text;

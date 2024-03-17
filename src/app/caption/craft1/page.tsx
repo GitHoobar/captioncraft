@@ -22,9 +22,9 @@
         setLoading(true);
         const response = await axios.post("https://captioncraft.vercel.app/api/youtube", { youtubeLink: url });
         const data = response.data.transcription;
-        // const parsedData = JSON.parse(data);
-        // const transcriptValue = parsedData.text;
-        setTranscript(data);
+        const parsedData = JSON.parse(data);
+        const transcriptValue = parsedData.text;
+        setTranscript(transcriptValue);
         console.log("Video downloaded successfully")
       } catch (error) {
         console.error("Error downloading video:", error);

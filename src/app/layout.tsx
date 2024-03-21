@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 const minecraft = localFont({
   src: [
     {
-      path: '../../public/fonts/Minecraft.ttf',
+      path: '../../fonts/Minecraft.ttf',
     }
   ],
   variable: '--font-minecraft'

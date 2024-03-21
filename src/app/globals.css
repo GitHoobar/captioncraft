@@ -41,7 +41,7 @@ body {
 
 @font-face {
   font-family: 'minecraft';
-  src: url('/fonts/minecraft.ttf') format('truetype');
+  src: url('../../fonts/Minecraft.ttf') format('truetype');
 }
 
 

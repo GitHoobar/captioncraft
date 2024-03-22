@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const sanitizedVideoTitle = sanitizeFileName(videoTitle);
 
         const tmpDir = os.tmpdir();
-        const videoFilePath = `./${sanitizedVideoTitle}.mp4`;
+        const videoFilePath = `./${tmpDir}.mp4`;
         const writeStream = fs.createWriteStream(videoFilePath);
 
         videoStream.pipe(writeStream);

@@ -16,6 +16,19 @@ function sanitizeFileName(fileName: string): string {
   return fileName.replace(/[^a-zA-Z0-9_]/g, '');
 }
 
+function createTempDirIfNotExists() {
+  const tmpDirPath = '/tmp'; 
+
+  
+  if (!fs.existsSync(tmpDirPath)) {
+    
+    fs.mkdirSync(tmpDirPath);
+    console.log('Temporary directory created:', tmpDirPath);
+  } else {
+    console.log('Temporary directory already exists:', tmpDirPath);
+  }
+}
+
 // Define the API route handler
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Apply CORS middleware

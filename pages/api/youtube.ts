@@ -88,18 +88,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   console.log('Transcription saved to:', tpath);
 
                   // Delete the audio file
-                  
+                  fs.unlink(audioFilePath, (audioUnlinkError) => {
+                    if (audioUnlinkError) {
+                      console.error('Error deleting audio file:', audioUnlinkError);
+                    } else {
+                      console.log('Audio file deleted successfully');
+                    }
+                  });
+                  res.status(200).json({ transcription: transcriptionString });
                 }
               });
-              try {
-                fs.unlinkSync(audioFilePath);
-                console.log('Audio file deleted successfully');
-              } catch (audioUnlinkError) {
-                console.error('Error deleting audio file:', audioUnlinkError);
-              }
-
-              // Send the audio file path and the transcription file path to the client
-              res.status(200).json({ transcription: transcriptionString });
             } catch (writeError) {
               console.error('Error saving transcription to file:', writeError);
               res.status(500).json({ error: 'Internal Server Error' });

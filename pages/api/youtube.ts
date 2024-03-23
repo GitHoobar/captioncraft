@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import OpenAI from 'openai';
 import ytdl from 'ytdl-core';
 import fs from 'fs';
@@ -8,7 +7,7 @@ import path from 'path';
 import { corsMiddleware } from '../../middleware/cors';
 import axios from 'axios';
 require('dotenv').config();
-const CloudConvert = require('cloudconvert-node');
+const CloudConvert = require('cloudconvert');
 
 
 const cors = corsMiddleware;

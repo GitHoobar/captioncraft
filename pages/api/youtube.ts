@@ -58,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           console.log('Video downloaded successfully');
 
           // Convert video to audio using ffmpeg
-          const audioFilePath = `./test.mp3`;
+          const audioFilePath = path.join(tmpDir,'test.mp3');
           const bitrate = '128k';
           const ffmpegCommand = `ffmpeg -i ${videoFilePath} -vn -acodec libmp3lame -b:a ${bitrate}  -y ${audioFilePath}`;
 

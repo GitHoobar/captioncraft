@@ -1,5 +1,6 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
+import type {VercelRequest,VercelResponse} from '@vercel/node';
 import OpenAI from 'openai';
 import ytdl from 'ytdl-core';
 import fs from 'fs';
@@ -48,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const sanitizedVideoTitle = sanitizeFileName(videoTitle);
 
         const tmpDir = os.tmpdir();
-        const videoFilePath = `./${tmpDir}.mp4`;
+        const videoFilePath = `./${tmpDir }.mp4`;
         const writeStream = fs.createWriteStream(videoFilePath);
 
         videoStream.pipe(writeStream);

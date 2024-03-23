@@ -78,7 +78,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
               // Transcribing
               const transcription = await transcribeAudio(audioFilePath);
-              const tpath = path.join(__dirname, '/tmp', 'transcription.txt');
+              const tpath = path.join(tmpDir,'transcription.txt');
 
               const transcriptionString = JSON.stringify(transcription, null, 2); // Pretty-print with 2 spaces indentation
               fs.writeFile(tpath, transcriptionString, (err) => {
@@ -88,14 +88,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   console.log('Transcription saved to:', tpath);
 
                   // Delete the audio file
-                  try {
-                    fs.unlinkSync(audioFilePath);
-                    console.log('Audio file deleted successfully');
-                  } catch (audioUnlinkError) {
-                    console.error('Error deleting audio file:', audioUnlinkError);
-                  }
+                  
                 }
               });
+              try {
+                fs.unlinkSync(audioFilePath);
+                console.log('Audio file deleted successfully');
+              } catch (audioUnlinkError) {
+                console.error('Error deleting audio file:', audioUnlinkError);
+              }
 
               // Send the audio file path and the transcription file path to the client
               res.status(200).json({ transcription: transcriptionString });

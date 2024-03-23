@@ -65,6 +65,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           exec(ffmpegCommand, async (error, stdout, stderr) => {
             console.log('Video converted to audio successfully');
 
+            if (error) {
+              console.error('Error converting video to audio:', error);
+              res.status(500).json({ error: 'Internal Server Error' });
+              return;
+            }
+
+            if (!fs.existsSync(audioFilePath)) {
+              console.error('Error: Audio file not found');
+              res.status(500).json({ error: 'Internal Server Error' });
+              return;
+            }
             // Delete the original video file
             try {
               fs.unlinkSync(videoFilePath);

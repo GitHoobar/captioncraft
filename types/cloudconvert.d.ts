@@ -1,1 +1,1 @@
-declare module 'cloudconvert';
+declare module 'cloudconvert-node';

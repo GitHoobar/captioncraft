@@ -6,8 +6,10 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { corsMiddleware } from '../../middleware/cors';
-import  CloudConvert from 'cloudconvert'; 
+import axios from 'axios';
 require('dotenv').config();
+const CloudConvert = require('cloudconvert-node');
+
 
 const cors = corsMiddleware;
 
@@ -57,30 +59,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const apiKey = process.env.CLOUDCONVERT_API_KEY ?? ''; 
           const cloudConvert = new CloudConvert(apiKey);
 
-          
-          const audioFilePath = path.join(tmpDir, 'test.mp3');
-          const conversion = await cloudConvert.jobs.convert({
-            inputformat: 'mp4',
-            outputformat: 'mp3',
-            input: 'upload',
-            file: fs.createReadStream(videoFilePath),
-          });
+          try {
+            const uploadedFile = await cloudConvert.upload(videoFilePath);
+            const convertedFile = await cloudConvert.convert({
+              'input': 'upload',
+              'file': uploadedFile.payload.uid,
+              'outputformat': 'mp3'
+            });
+        
+            const audioFileUrl = convertedFile.payload.url;
+            console.log(`Conversion successful! Audio file URL: ${audioFileUrl}`);
 
           
-          if (conversion && conversion.step === 'finished') {
-            
-            const convertedAudio = await cloudConvert.download(conversion.output.url);
-            fs.writeFileSync(audioFilePath, convertedAudio);
-
-            console.log('Video converted to audio successfully');
-
-            
-            fs.unlinkSync(videoFilePath);
-            console.log('Video file deleted successfully');
+          
 
             try {
               
-              const transcription = await transcribeAudio(audioFilePath);
+              const transcription = await transcribeAudio(audioFileUrl);
               const tpath = path.join(tmpDir, 'transcription.txt');
 
               const transcriptionString = JSON.stringify(transcription, null, 2);
@@ -91,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   console.log('Transcription saved to:', tpath);
 
                   
-                  fs.unlink(audioFilePath, (audioUnlinkError) => {
+                  fs.unlink(audioFileUrl, (audioUnlinkError) => {
                     if (audioUnlinkError) {
                       console.error('Error deleting audio file:', audioUnlinkError);
                     } else {
@@ -105,8 +100,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               console.error('Error saving transcription to file:', writeError);
               res.status(500).json({ error: 'Internal Server Error' });
             }
-          } else {
-            console.error('Error converting video to audio:', conversion.message);
+          } catch {
+            console.error('Error converting video to audio:' );
             res.status(500).json({ error: 'Internal Server Error' });
           }
         });
@@ -121,16 +116,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 
-async function transcribeAudio(audioFilePath: string) {
+async function transcribeAudio(audioFileUrl: string) {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
   });
 
   try {
+    const tmpDir = os.tmpdir();
+    const tempFilePath = path.join(tmpDir, 'temp.mp3');
+
+        
+    const response = await axios.get(audioFileUrl, { responseType: 'stream' });
+    const writer = fs.createWriteStream(tempFilePath);
+    response.data.pipe(writer);
+
+    await new Promise((resolve, reject) => {
+      writer.on('finish', resolve);
+      writer.on('error', reject);
+    });
+
+
     const transcription = await openai.audio.transcriptions.create({
-      file: fs.createReadStream(audioFilePath), // Pass the file path directly
+      file: fs.createReadStream(tempFilePath),
       model: "whisper-1",
     });
+
+    fs.unlinkSync(tempFilePath);
 
     return transcription;
   } catch (error) {

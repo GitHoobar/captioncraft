@@ -49,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const sanitizedVideoTitle = sanitizeFileName(videoTitle);
 
         const tmpDir = os.tmpdir();
-        const videoFilePath = `./${tmpDir }.mp4`;
+        const videoFilePath = path.join(tmpDir,'tmp.mp4');
         const writeStream = fs.createWriteStream(videoFilePath);
 
         videoStream.pipe(writeStream);
@@ -78,7 +78,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
               // Transcribing
               const transcription = await transcribeAudio(audioFilePath);
-              const tpath = path.join(__dirname, '../../../../', 'transcription.txt');
+              const tpath = path.join(__dirname, '/tmp', 'transcription.txt');
 
               const transcriptionString = JSON.stringify(transcription, null, 2); // Pretty-print with 2 spaces indentation
               fs.writeFile(tpath, transcriptionString, (err) => {

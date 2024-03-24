@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
           try {
             const createJobResponse = await axios.post(
-              "https://sync.api.cloudconvert.com/v2/jobs",
+              "https://api.cloudconvert.com/v2/jobs",
               {
                 tasks: {
                   'import-1': {
@@ -85,15 +85,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 },
               }
             )
-            console.log(createJobResponse.data)
+            const jobId = createJobResponse.data.data.id;
+            console.log(`Job created successfully! Job ID: ${jobId}`);
+            while (true) {
+              const jobStatusResponse = await axios.get(
+                `https://api.cloudconvert.com/v2/jobs/${jobId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json',
+                  },
+                }
+              );
+              const jobStatus = jobStatusResponse.data.data.status;
+              if (jobStatus === 'completed') {
+                console.log('Job completed successfully');
+                break;
+              } else if (jobStatus === 'error') {
+                console.error('Job failed');
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+              } else {
+                console.log('Job in progress');
+                await new Promise((resolve) => setTimeout(resolve, 5000));
+              }
+            }  
 
-
-        
-            const audioFileUrl = createJobResponse.data.data.tasks['export-1'].result.files[0].url;
+            const jobResponse = await axios.get(  
+              `https://api.cloudconvert.com/v2/jobs/${jobId}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${apiKey}`,
+                  'Content-Type': 'application/json',
+                },
+              }
+            );  
+              
+            const audioFileUrl = jobResponse.data.data.tasks.convert_1.result.files[0].url;
             console.log(`Conversion successful! Audio file URL: ${audioFileUrl}`);
-
-          
-          
 
             try {
               

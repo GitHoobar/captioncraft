@@ -99,8 +99,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               console.error('Error saving transcription to file:', writeError);
               res.status(500).json({ error: 'Internal Server Error' });
             }
-          } catch {
-            console.error('Error converting video to audio:' );
+          } catch (error) {
+            console.error('Error converting video to audio:', error );
             res.status(500).json({ error: 'Internal Server Error' });
           }
         });

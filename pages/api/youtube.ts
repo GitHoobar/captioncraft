@@ -63,6 +63,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return;
           }
 
+          const stats = fs.statSync(videoFilePath);   
+          const fileSizeInBytes = stats.size;
+          const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
+          if (fileSizeInMegabytes > 10) {
+            console.error('Video file too large:', fileSizeInMegabytes, 'MB');
+            res.status(400).json({ error: 'Video file too large. Max file size is 10MB.' });
+            return;
+          } 
+
           try {
             const createJobResponse = await axios.post(
               "https://api.cloudconvert.com/v2/jobs",
@@ -70,7 +79,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 tasks: {
                   'import-1': {
                     operation: 'import/url',
-                    url: `data:video/mp4;base64,${fs.readFileSync(videoFilePath, 'base64')}`,
+                    file: `data:video/mp4;base64,${fs.readFileSync(videoFilePath, 'base64')}`,
                     filename: `${sanitizedVideoTitle}.mp4`,
                   },
                   'convert-1': {

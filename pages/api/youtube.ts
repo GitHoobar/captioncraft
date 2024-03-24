@@ -89,7 +89,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 
         
-            const audioFileUrl = convertedFile.payload.url;
+            const audioFileUrl = createJobResponse.data.data.tasks['export-1'].result.files[0].url;
             console.log(`Conversion successful! Audio file URL: ${audioFileUrl}`);
 
           

@@ -56,15 +56,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           console.log('Video downloaded successfully');
 
           const apiKey = process.env.CLOUDCONVERT_API_KEY ?? ''; 
-          const cloudConvert = new CloudConvert(apiKey);
 
           try {
-            const uploadedFile = await cloudConvert.upload(videoFilePath);
-            const convertedFile = await cloudConvert.convert({
-              'input': 'upload',
-              'file': uploadedFile.payload.uid,
-              'outputformat': 'mp3'
-            });
+            const createJobResponse = await axios.post(
+              "https://sync.api.cloudconvert.com/v2/jobs",
+              {
+                tasks: {
+                  'import-1': {
+                    operation: 'import/url',
+                    url: `file://${videoFilePath}`,
+                  },
+                  'convert-1': {
+                    operation: 'convert',
+                    input: 'import-1',
+                    input_format: 'mp4',
+                    output_format: 'mp3',
+                  },
+                  'export-1': {
+                    operation: 'export/url',
+                    input: 'convert-1',
+                  },
+                },
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${apiKey}`,
+                  'Content-Type': 'application/json',
+                },
+              }
+            )
+            console.log(createJobResponse.data)
+
+
         
             const audioFileUrl = convertedFile.payload.url;
             console.log(`Conversion successful! Audio file URL: ${audioFileUrl}`);

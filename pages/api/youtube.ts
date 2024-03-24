@@ -55,7 +55,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         writeStream.on('finish', async () => {
           console.log('Video downloaded successfully');
 
-          const apiKey = process.env.CLOUDCONVERT_API_KEY ?? ''; 
+          const apiKey = process.env.CLOUDCONVERT_API_KEY; 
+
+          if (!apiKey) {
+            console.error('CloudConvert API key not found');
+            res.status(500).json({ error: 'No Cloud Convert API key found.' });
+            return;
+          }
 
           try {
             const createJobResponse = await axios.post(
@@ -64,7 +70,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 tasks: {
                   'import-1': {
                     operation: 'import/url',
-                    url: `file://${videoFilePath}`,
+                    url: `data:video/mp4;base64,${fs.readFileSync(videoFilePath, 'base64')}`,
+                    filename: `${sanitizedVideoTitle}.mp4`,
                   },
                   'convert-1': {
                     operation: 'convert',
@@ -119,7 +126,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   'Content-Type': 'application/json',
                 },
               }
-            );  
+            );    
               
             const audioFileUrl = jobResponse.data.data.tasks.convert_1.result.files[0].url;
             console.log(`Conversion successful! Audio file URL: ${audioFileUrl}`);

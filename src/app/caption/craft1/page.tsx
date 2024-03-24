@@ -21,7 +21,7 @@
       try {
         setLoading(true);
         console.log("Attempting to download video...");
-        const response = await axios.post("https://captioncraft.vercel.app/api/youtube", { youtubeLink: url });
+        const response = await axios.post("https://captioncraft.vercel.app/api/youtube", { youtubeLink: url }, { timeout:  1000 * 60 * 5 });
         console.log("Response received:", response);
         const data = response.data.transcription;
         const parsedData = JSON.parse(data);

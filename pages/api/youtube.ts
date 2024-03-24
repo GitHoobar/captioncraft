@@ -29,7 +29,6 @@ function createTempDirIfNotExists() {
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  
   cors(req, res, async () => {
     
     if (req.method === 'POST') {
@@ -218,3 +217,6 @@ async function transcribeAudio(audioFileUrl: string) {
     throw error;
   }
 }
+
+
+export const runtime = 'edge';

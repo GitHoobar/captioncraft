@@ -7,7 +7,6 @@ import path from 'path';
 import { corsMiddleware } from '../../middleware/cors';
 import axios from 'axios';
 require('dotenv').config();
-const CloudConvert = require('cloudconvert');
 
 
 const cors = corsMiddleware;
@@ -78,8 +77,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               {
                 tasks: {
                   'import-1': {
-                    operation: 'import/url',
-                    file: `data:video/mp4;base64,${fs.readFileSync(videoFilePath, 'base64')}`,
+                    operation: 'import/base64',
+                    file: `${fs.readFileSync(videoFilePath, 'base64')}`,
                     filename: `${sanitizedVideoTitle}.mp4`,
                   },
                   'convert-1': {
@@ -103,6 +102,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             )
             const jobId = createJobResponse.data.data.id;
             console.log(`Job created successfully! Job ID: ${jobId}`);
+
             while (true) {
               const jobStatusResponse = await axios.get(
                 `https://api.cloudconvert.com/v2/jobs/${jobId}`,
@@ -114,7 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
               );
               const jobStatus = jobStatusResponse.data.data.status;
-              if (jobStatus === 'completed') {
+              if (jobStatus === 'finished') {
                 console.log('Job completed successfully');
                 break;
               } else if (jobStatus === 'error') {
@@ -137,7 +137,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               }
             );    
               
-            const audioFileUrl = jobResponse.data.data.tasks.convert_1.result.files[0].url;
+            const audioFileUrl = jobResponse.data.data.tasks.find(
+              (task: {[key: string]: any}) => task.name === 'export-1'
+            ).result.files[0].url;
             console.log(`Conversion successful! Audio file URL: ${audioFileUrl}`);
 
             try {
@@ -153,11 +155,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   console.log('Transcription saved to:', tpath);
 
                   
-                  fs.unlink(audioFileUrl, (audioUnlinkError) => {
+                  fs.unlink(videoFilePath, (audioUnlinkError) => {
                     if (audioUnlinkError) {
                       console.error('Error deleting audio file:', audioUnlinkError);
                     } else {
-                      console.log('Audio file deleted successfully');
+                      console.log('Video file deleted successfully');
                     }
                   });
                   res.status(200).json({ transcription: transcriptionString });

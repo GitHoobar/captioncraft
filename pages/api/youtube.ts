@@ -1,3 +1,4 @@
+export const maxDuration = 30;
 import { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
 import ytdl from 'ytdl-core';
@@ -219,4 +220,3 @@ async function transcribeAudio(audioFileUrl: string) {
 }
 
 
-  

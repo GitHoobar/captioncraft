@@ -1,4 +1,3 @@
-export const maxDuration = 60; 
 import { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
 import ytdl from 'ytdl-core';
@@ -7,10 +6,7 @@ import os from 'os';
 import path from 'path';
 import { corsMiddleware } from '../../middleware/cors';
 import axios from 'axios';
-import ffmetadata from 'ffmetadata';
 require('dotenv').config();
-
-
 
 
 const cors = corsMiddleware;
@@ -53,15 +49,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const writeStream = fs.createWriteStream(videoFilePath);
 
         videoStream.pipe(writeStream);
-
-        const metadata = await ffmetadata.read(videoFilePath);
-const durationInSeconds = metadata.duration.seconds;
-
-if (durationInSeconds > maxDuration) {
-  console.error(`Video duration (${durationInSeconds} seconds) exceeds the maximum allowed duration of ${maxDuration} seconds.`);
-  res.status(400).json({ error: `Video duration exceeds the maximum allowed duration of ${maxDuration} seconds.` });
-  return;
-}
 
         writeStream.on('finish', async () => {
           console.log('Video downloaded successfully');
@@ -155,26 +142,8 @@ if (durationInSeconds > maxDuration) {
             console.log(`Conversion successful! Audio file URL: ${audioFileUrl}`);
 
             try {
-              const metadata = await ffmetadata.read(audioFileUrl);
-              const duration = metadata.duration.seconds;
-            
-              if (duration > maxDuration) {
-                console.error('Audio file duration exceeds the maximum allowed duration:', maxDuration, 'seconds');
-                res.status(400).json({ error: `Audio file duration exceeds the maximum allowed duration of ${maxDuration} seconds.` });
-                return;
-              }
-            
-              console.log('Audio file duration:', duration, 'seconds');
-            } catch (error) {
-              console.error('Error reading audio file metadata:', error);
-              res.status(500).json({ error: 'Internal Server Error' });
-              return;
-            }
-
-            try {
               
               const transcription = await transcribeAudio(audioFileUrl);
-              
               const tpath = path.join(tmpDir, 'transcription.txt');
 
               const transcriptionString = JSON.stringify(transcription, null, 2);
@@ -248,4 +217,5 @@ async function transcribeAudio(audioFileUrl: string) {
     throw error;
   }
 }
+
 

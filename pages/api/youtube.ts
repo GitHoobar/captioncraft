@@ -8,6 +8,8 @@ import { corsMiddleware } from '../../middleware/cors';
 import axios from 'axios';
 require('dotenv').config();
 
+export const maxDuration = 30; 
+
 
 const cors = corsMiddleware;
 
@@ -218,5 +220,3 @@ async function transcribeAudio(audioFileUrl: string) {
   }
 }
 
-
-export const runtime = 'edge';
